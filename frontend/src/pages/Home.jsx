@@ -13,8 +13,7 @@ const Home = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get('http://localhost:5555/books')
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/books`)
       .then((response) => {
         setBooks(response.data.data);
         setLoading(false);
