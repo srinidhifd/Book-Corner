@@ -9,9 +9,20 @@ const app = express();
 
 app.use(express.json());
 
-app.use(cors({
-    origin: 'https://book-corner-frontend.onrender.com', // restrict to your frontend URL
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // only allow the methods you use
+const allowedOrigins = [
+    'http://localhost:5173', // Local development frontend
+    'https://book-corner-frontend.onrender.com' // Deployed frontend
+  ];
+  
+  app.use(cors({
+    origin: function (origin, callback) {
+      if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
   }));
 
 

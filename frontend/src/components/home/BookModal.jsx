@@ -5,38 +5,51 @@ import { BiUserCircle } from 'react-icons/bi';
 const BookModal = ({ book, onClose }) => {
   return (
     <div
-      className='fixed bg-black bg-opacity-60 top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center'
+      className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center transition-opacity duration-300"
       onClick={onClose}
     >
       <div
         onClick={(event) => event.stopPropagation()}
-        className='w-[600px] max-w-full h-[400px] bg-white rounded-xl p-4 flex flex-col relative'
+        className="w-[90%] max-w-2xl bg-white rounded-2xl p-6 flex flex-col relative shadow-xl animate-zoomIn transition-all duration-300"
       >
-        <AiOutlineClose
-          className='absolute right-6 top-6 text-3xl text-red-600 cursor-pointer'
+        {/* Close Button with Tooltip */}
+        <button
+          aria-label="Close"
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors text-2xl"
           onClick={onClose}
-        />
-        <h2 className='w-fit px-4 py-1 bg-red-300 rounded-lg'>
-          {book.publishYear}
-        </h2>
-        <h4 className='my-2 text-gray-500'>{book._id}</h4>
-        <div className='flex justify-start items-center gap-x-2'>
-          <PiBookOpenTextLight className='text-red-300 text-2xl' />
-          <h2 className='my-1'>{book.title}</h2>
+          title="Close"
+        >
+          <AiOutlineClose />
+        </button>
+
+        {/* Book Information Section */}
+        <div className="mb-6">
+          <div className="flex items-center gap-3 mb-2">
+            <PiBookOpenTextLight className="text-blue-500 text-3xl" />
+            <h2 className="text-2xl font-semibold text-gray-800">{book.title}</h2>
+          </div>
+          <div className="flex items-center gap-3 mb-4">
+            <BiUserCircle className="text-blue-500 text-2xl" />
+            <h3 className="text-lg text-gray-600">{book.author}</h3>
+          </div>
+          <h4 className="w-fit px-3 py-1 bg-blue-100 text-blue-700 font-medium rounded-lg text-sm">
+            Published in {book.publishYear}
+          </h4>
         </div>
-        <div className='flex justify-start items-center gap-x-2'>
-          <BiUserCircle className='text-red-300 text-2xl' />
-          <h2 className='my-1'>{book.author}</h2>
+
+        {/* Separator */}
+        <hr className="my-4 border-gray-300" />
+
+        {/* Scrollable Content Area for Description */}
+        <div className="overflow-y-auto max-h-60 pr-4">
+          <h5 className="text-gray-700 font-semibold mb-2">About this Book</h5>
+          <p className="text-gray-600 leading-relaxed text-sm">
+            {book.description || "No additional information available for this book."}
+          </p>
         </div>
-        <p className='mt-4'>Anything You want to show</p>
-        <p className='my-2'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni quia
-          voluptatum sint. Nisi impedit libero eveniet cum vitae qui expedita
-          necessitatibus assumenda laboriosam, facilis iste cumque a pariatur
-          nesciunt cupiditate voluptas? Quis atque earum voluptate dolor nisi
-          dolorum est? Deserunt placeat cumque quo dicta architecto, dolore
-          vitae voluptate sequi repellat!
-        </p>
+
+        {/* Divider for Extra Information */}
+        <hr className="my-4 border-gray-300" />
       </div>
     </div>
   );

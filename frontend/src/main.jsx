@@ -7,7 +7,13 @@ import { SnackbarProvider } from 'notistack';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
-  <SnackbarProvider>
+  <SnackbarProvider 
+      maxSnack={3}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+    >
     <App />
   </SnackbarProvider>
 </BrowserRouter>,

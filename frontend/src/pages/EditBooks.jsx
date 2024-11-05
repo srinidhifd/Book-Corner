@@ -11,25 +11,32 @@ const EditBooks = () => {
   const [publishYear, setPublishYear] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const {id} = useParams();
+  const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/books/${id}`)
-    .then((response) => {
+    axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/books/${id}`)
+      .then((response) => {
+        setTitle(response.data.title);
         setAuthor(response.data.author);
-        setPublishYear(response.data.publishYear)
-        setTitle(response.data.title)
+        setPublishYear(response.data.publishYear);
         setLoading(false);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         setLoading(false);
-        alert('An error happened. Please Chack console');
+        enqueueSnackbar('Failed to load book data. Please check the console.', { variant: 'error' });
         console.log(error);
       });
-  }, []);
-  
+  }, [id, enqueueSnackbar]);
+
   const handleEditBook = () => {
+    if (!title || !author || !publishYear) {
+      enqueueSnackbar('Please fill in all fields', { variant: 'warning' });
+      return;
+    }
+
     const data = {
       title,
       author,
@@ -40,56 +47,85 @@ const EditBooks = () => {
       .put(`${import.meta.env.VITE_BACKEND_URL}/books/${id}`, data)
       .then(() => {
         setLoading(false);
-        enqueueSnackbar('Book Edited successfully', { variant: 'success' });
+        enqueueSnackbar('Book edited successfully', { variant: 'success' });
         navigate('/');
       })
       .catch((error) => {
         setLoading(false);
-        // alert('An error happened. Please Chack console');
-        enqueueSnackbar('Error', { variant: 'error' });
+        enqueueSnackbar('An error occurred. Please try again.', { variant: 'error' });
         console.log(error);
       });
   };
 
   return (
-    <div className='p-4'>
-      <BackButton />
-      <h1 className='text-3xl my-4'>Edit Book</h1>
-      {loading ? <Spinner /> : ''}
-      <div className='flex flex-col border-2 border-sky-400 rounded-xl w-[600px] p-4 mx-auto'>
-        <div className='my-4'>
-          <label className='text-xl mr-4 text-gray-500'>Title</label>
+    <div className="relative flex flex-col items-center p-6 bg-gray-100 min-h-screen">
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
+          <Spinner />
+        </div>
+      )}
+
+      {/* Back Button at Top-Left Corner */}
+      <div className="absolute top-4 left-4">
+        <BackButton />
+      </div>
+
+      <h1 className="text-3xl font-bold text-gray-800 my-6">Edit Book</h1>
+
+      <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+        <div className="mb-4">
+          <label className="block text-gray-600 text-lg font-medium mb-2" htmlFor="title">
+            Title
+          </label>
           <input
-            type='text'
+            id="title"
+            type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className='border-2 border-gray-500 px-4 py-2 w-full'
+            className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter book title"
           />
         </div>
-        <div className='my-4'>
-          <label className='text-xl mr-4 text-gray-500'>Author</label>
+
+        <div className="mb-4">
+          <label className="block text-gray-600 text-lg font-medium mb-2" htmlFor="author">
+            Author
+          </label>
           <input
-            type='text'
+            id="author"
+            type="text"
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
-            className='border-2 border-gray-500 px-4 py-2  w-full '
+            className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter author's name"
           />
         </div>
-        <div className='my-4'>
-          <label className='text-xl mr-4 text-gray-500'>Publish Year</label>
+
+        <div className="mb-6">
+          <label className="block text-gray-600 text-lg font-medium mb-2" htmlFor="publishYear">
+            Publish Year
+          </label>
           <input
-            type='number'
+            id="publishYear"
+            type="number"
             value={publishYear}
             onChange={(e) => setPublishYear(e.target.value)}
-            className='border-2 border-gray-500 px-4 py-2  w-full '
+            className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter publish year"
           />
         </div>
-        <button className='p-2 bg-sky-300 m-8' onClick={handleEditBook}>
-          Save
+
+        <button
+          onClick={handleEditBook}
+          className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all duration-300"
+          disabled={loading}
+        >
+          Save Changes
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EditBooks
+export default EditBooks;

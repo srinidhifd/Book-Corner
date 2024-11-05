@@ -11,38 +11,73 @@ const BookSingleCard = ({ book }) => {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className='border-2 border-gray-500 rounded-lg px-4 py-2 m-4 relative hover:shadow-xl'>
-      <h2 className='absolute top-1 right-2 px-4 py-1 bg-red-300 rounded-lg'>
-        {book.publishYear}
-      </h2>
-      <h4 className='my-2 text-gray-500'>{book._id}</h4>
-      <div className='flex justify-start items-center gap-x-2'>
-        <PiBookOpenTextLight className='text-red-300 text-2xl' />
-        <h2 className='my-1'>{book.title}</h2>
+    <>
+      <div
+        className="relative border rounded-lg p-4 bg-white shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer flex flex-col justify-between"
+        onClick={() => setShowModal(true)}
+      >
+        {/* Publish Year Badge */}
+        <span className="absolute top-5 right-4 bg-blue-100 text-blue-800 px-2 py-1 text-xs font-semibold rounded-full shadow">
+          {book.publishYear}
+        </span>
+
+        {/* Book Title and Author */}
+        <div className="mb-4">
+          <div className="flex items-center gap-2 mb-2">
+            <PiBookOpenTextLight className="text-blue-500 text-3xl" aria-label="Book Icon" />
+            <h2 className="text-lg font-semibold text-gray-800">{book.title}</h2>
+          </div>
+          <div className="flex items-center gap-2">
+            <BiUserCircle className="text-blue-500 text-2xl" aria-label="Author Icon" />
+            <p className="text-gray-600 text-sm">{book.author}</p>
+          </div>
+        </div>
+
+        {/* Action Icons - Permanently Visible */}
+        <div className="flex justify-around items-center mt-4 pt-2 border-t">
+          <div
+            className="flex flex-col items-center cursor-pointer group"
+            onClick={(e) => {
+              e.stopPropagation(); // Prevents triggering the modal
+              setShowModal(true);
+            }}
+          >
+            <BiShow className="text-2xl text-blue-600 group-hover:text-blue-800 transition-colors" aria-label="View Icon" />
+            <span className="text-xs text-gray-500 mt-1">View</span>
+          </div>
+
+          <Link
+            to={`/books/details/${book._id}`}
+            className="flex flex-col items-center group"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <BsInfoCircle className="text-2xl text-green-600 group-hover:text-green-800 transition-colors" aria-label="Info Icon" />
+            <span className="text-xs text-gray-500 mt-1">Info</span>
+          </Link>
+
+          <Link
+            to={`/books/edit/${book._id}`}
+            className="flex flex-col items-center group"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <AiOutlineEdit className="text-2xl text-yellow-500 group-hover:text-yellow-700 transition-colors" aria-label="Edit Icon" />
+            <span className="text-xs text-gray-500 mt-1">Edit</span>
+          </Link>
+
+          <Link
+            to={`/books/delete/${book._id}`}
+            className="flex flex-col items-center group"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <MdOutlineDelete className="text-2xl text-red-500 group-hover:text-red-700 transition-colors" aria-label="Delete Icon" />
+            <span className="text-xs text-gray-500 mt-1">Delete</span>
+          </Link>
+        </div>
       </div>
-      <div className='flex justify-start items-center gap-x-2'>
-        <BiUserCircle className='text-red-300 text-2xl' />
-        <h2 className='my-1'>{book.author}</h2>
-      </div>
-      <div className='flex justify-between items-center gap-x-2 mt-4 p-4'>
-        <BiShow
-          className='text-3xl text-blue-800 hover:text-black cursor-pointer'
-          onClick={() => setShowModal(true)}
-        />
-        <Link to={`/books/details/${book._id}`}>
-          <BsInfoCircle className='text-2xl text-green-800 hover:text-black' />
-        </Link>
-        <Link to={`/books/edit/${book._id}`}>
-          <AiOutlineEdit className='text-2xl text-yellow-600 hover:text-black' />
-        </Link>
-        <Link to={`/books/delete/${book._id}`}>
-          <MdOutlineDelete className='text-2xl text-red-600 hover:text-black' />
-        </Link>
-      </div>
-      {showModal && (
-        <BookModal book={book} onClose={() => setShowModal(false)} />
-      )}
-    </div>
+
+      {/* Modal for Viewing Book Details */}
+      {showModal && <BookModal book={book} onClose={() => setShowModal(false)} />}
+    </>
   );
 };
 

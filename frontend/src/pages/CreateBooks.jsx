@@ -14,6 +14,11 @@ const CreateBooks = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleSaveBook = () => {
+    if (!title || !author || !publishYear) {
+      enqueueSnackbar('Please fill in all fields', { variant: 'warning' });
+      return;
+    }
+
     const data = {
       title,
       author,
@@ -29,51 +34,80 @@ const CreateBooks = () => {
       })
       .catch((error) => {
         setLoading(false);
-        // alert('An error happened. Please Chack console');
-        enqueueSnackbar('Error', { variant: 'error' });
+        enqueueSnackbar('An error occurred. Please try again.', { variant: 'error' });
         console.log(error);
       });
-  }
+  };
 
   return (
-    <div className='p-4'>
-    <BackButton />
-    <h1 className='text-3xl my-4'>Create Book</h1>
-    {loading ? <Spinner /> : ''}
-    <div className='flex flex-col border-2 border-sky-400 rounded-xl w-[600px] p-4 mx-auto'>
-      <div className='my-4'>
-        <label className='text-xl mr-4 text-gray-500'>Title</label>
-        <input
-          type='text'
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className='border-2 border-gray-500 px-4 py-2 w-full'
-        />
+    <div className="relative flex flex-col items-center p-6 bg-gray-100 min-h-screen">
+      {/* Position Back Button in the top-left corner */}
+      <div className="absolute top-4 left-4">
+        <BackButton />
       </div>
-      <div className='my-4'>
-        <label className='text-xl mr-4 text-gray-500'>Author</label>
-        <input
-          type='text'
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-          className='border-2 border-gray-500 px-4 py-2  w-full '
-        />
-      </div>
-      <div className='my-4'>
-        <label className='text-xl mr-4 text-gray-500'>Publish Year</label>
-        <input
-          type='number'
-          value={publishYear}
-          onChange={(e) => setPublishYear(e.target.value)}
-          className='border-2 border-gray-500 px-4 py-2  w-full '
-        />
-      </div>
-      <button className='p-2 bg-sky-300 m-8' onClick={handleSaveBook}>
-        Save
-      </button>
-    </div>
-  </div>
-  )
-}
 
-export default CreateBooks
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
+          <Spinner />
+        </div>
+      )}
+
+      <h1 className="text-3xl font-bold text-gray-800 my-6">Add Book</h1>
+
+      <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+        <div className="mb-4">
+          <label className="block text-gray-600 text-lg font-medium mb-2" htmlFor="title">
+            Title
+          </label>
+          <input
+            id="title"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter book title"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-600 text-lg font-medium mb-2" htmlFor="author">
+            Author
+          </label>
+          <input
+            id="author"
+            type="text"
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+            className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter author's name"
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-gray-600 text-lg font-medium mb-2" htmlFor="publishYear">
+            Publish Year
+          </label>
+          <input
+            id="publishYear"
+            type="number"
+            value={publishYear}
+            onChange={(e) => setPublishYear(e.target.value)}
+            className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter publish year"
+          />
+        </div>
+
+        <button
+          onClick={handleSaveBook}
+          className="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all duration-300"
+          disabled={loading}
+        >
+          Save Book
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default CreateBooks;

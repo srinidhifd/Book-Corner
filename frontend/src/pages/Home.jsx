@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Spinner from '../components/Spinner';
 import { Link } from 'react-router-dom';
-import { MdOutlineAddBox, MdOutlineDelete } from 'react-icons/md';
+import { MdOutlineAddBox } from 'react-icons/md';
 import BooksTable from '../components/home/BooksTable';
 import BooksCard from '../components/home/BooksCard';
 
@@ -25,34 +25,56 @@ const Home = () => {
   }, []);
 
   return (
-    <div className='p-4'>
-      <div className='flex justify-center items-center gap-x-4'>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      {loading && <Spinner />}
+
+      {/* View Toggle Buttons */}
+      <div className="flex justify-center items-center gap-4 mb-6">
         <button
-          className='bg-sky-300 hover:bg-sky-600 px-4 py-1 rounded-lg'
+          className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 ${
+            showType === 'table' ? 'bg-blue-600 text-white shadow-lg' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
           onClick={() => setShowType('table')}
         >
-          Table
+          Table View
         </button>
         <button
-          className='bg-sky-300 hover:bg-sky-600 px-4 py-1 rounded-lg'
+          className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 ${
+            showType === 'card' ? 'bg-blue-600 text-white shadow-lg' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
           onClick={() => setShowType('card')}
         >
-          Card
+          Card View
         </button>
       </div>
-      <div className='flex justify-between items-center'>
-        <h1 className='text-3xl my-8'>Books List</h1>
-        <Link to='/books/create'>
-          <MdOutlineAddBox className='text-sky-800 text-4xl' />
+
+      {/* Header Section */}
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-700">Books List</h1>
+        <Link
+          to="/books/create"
+          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all duration-300 shadow-lg"
+        >
+          <MdOutlineAddBox className="text-2xl" />
+          <span className="text-lg font-medium">Add Book</span>
         </Link>
       </div>
-      {loading ? (
-        <Spinner />
-      ) : showType === 'table' ? (
-        <BooksTable books={books} />
-      ) : (
-        <BooksCard books={books} />
-      )}
+
+      {/* Content Display */}
+      <div className="bg-white shadow-lg rounded-lg p-6 min-h-[400px]">
+        {loading ? (
+          <Spinner />
+        ) : books.length === 0 ? (
+          <div className="text-center text-gray-500 py-16">
+            <p className="text-lg font-medium">No books available</p>
+            <p className="text-sm mt-2">Click "Add Book" to create a new entry.</p>
+          </div>
+        ) : showType === 'table' ? (
+          <BooksTable books={books} />
+        ) : (
+          <BooksCard books={books} />
+        )}
+      </div>
     </div>
   );
 };
