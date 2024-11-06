@@ -5,7 +5,7 @@ import { MdOutlineDelete } from 'react-icons/md';
 
 const BooksTable = ({ books }) => {
   return (
-    <div className="overflow-x-auto w-full p-4 bg-gray-100 rounded-lg shadow-lg">
+    <div className="overflow-x-auto w-full bg-gray-100 rounded-md shadow-lg">
       <table className="w-full text-left border-collapse rounded-lg overflow-hidden">
         <thead className="bg-gray-800 text-white">
           <tr>
