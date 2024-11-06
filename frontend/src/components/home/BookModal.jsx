@@ -1,8 +1,12 @@
 import { AiOutlineClose } from 'react-icons/ai';
 import { PiBookOpenTextLight } from 'react-icons/pi';
 import { BiUserCircle } from 'react-icons/bi';
+import { BiTimeFive } from 'react-icons/bi'; // Icon for time
 
 const BookModal = ({ book, onClose }) => {
+  // Helper function to format dates
+  const formatDate = (date) => new Date(date).toLocaleString();
+
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center transition-opacity duration-300"
@@ -50,6 +54,24 @@ const BookModal = ({ book, onClose }) => {
 
         {/* Divider for Extra Information */}
         <hr className="my-4 border-gray-300" />
+
+        {/* Additional Book Metadata */}
+        <div className="flex flex-col gap-3 mt-4">
+          <div className="flex items-center gap-3">
+            <BiTimeFive className="text-blue-500 text-xl" />
+            <div>
+              <span className="text-gray-600 font-medium">Created At: </span>
+              <span className="text-gray-700">{formatDate(book.createdAt)}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <BiTimeFive className="text-blue-500 text-xl" />
+            <div>
+              <span className="text-gray-600 font-medium">Last Updated: </span>
+              <span className="text-gray-700">{formatDate(book.updatedAt)}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
