@@ -14,20 +14,35 @@ const CreateBooks = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
+  // Input Fields Validation Function
   const validateInputs = () => {
     const errors = {};
-    if (!title || !/^[\w\s\-.,!?]+$/.test(title)) {
+  
+    // Title validation
+    if (!title) {
+      errors.title = 'Title is required.';
+    } else if (!/^[\w\s\-.,!?]+$/.test(title)) {
       errors.title = 'Title must be alphanumeric and may include special characters.';
     }
-    if (!author || !/^[a-zA-Z\s.]+$/.test(author)) {
+  
+    // Author validation
+    if (!author) {
+      errors.author = 'Author name is required.';
+    } else if (!/^[a-zA-Z\s.]+$/.test(author)) {
       errors.author = 'Author name should contain only alphabets, spaces, or dots.';
     }
-    if (!publishYear || !/^\d{4}$/.test(publishYear) || parseInt(publishYear) > new Date().getFullYear()) {
+  
+    // Publish Year validation
+    if (!publishYear) {
+      errors.publishYear = 'Publish year is required.';
+    } else if (!/^\d{4}$/.test(publishYear) || parseInt(publishYear) > new Date().getFullYear()) {
       errors.publishYear = 'Enter a valid publish year in YYYY format (up to the current year).';
     }
+  
     setErrors(errors);
     return Object.keys(errors).length === 0;
   };
+  
 
   const handleSaveBook = () => {
     if (!validateInputs()) {
