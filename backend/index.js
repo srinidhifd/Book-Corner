@@ -8,24 +8,32 @@ const app = express();
 
 app.use(express.json());
 
+const allowedOrigins = [
+    'http://localhost:5173', // Local development frontend
+    'https://book-corner-frontend.onrender.com' // Deployed frontend
+  ];
+  
+  app.use(cors({
+    origin: function (origin, callback) {
+      if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  }));
 
-app.use(cors({
-  origin: [process.env.FRONTEND_URL, 'http://localhost:3000'], // Configures CORS to allow requests from the specified origins
-  credentials: true // Allows cookies and credentials to be sent with requests
-}));
-
-
-
-app.use('/books', bookRoute);
+app.use('/books',bookRoute); 
 
 mongoose.connect(mongoDBURL)
-  .then(() => {
-    console.log("App connected to db");
-    app.listen(PORT, () => {
-      console.log(`App is listening to port: ${PORT}`)
+    .then(() => {
+        console.log("App connected to db");
+        app.listen(PORT, () => {
+            console.log(`App is listening to port: ${PORT}`)
+        });
+    })
+    .catch((error) => {
+        console.error(error)
     });
-  })
-  .catch((error) => {
-    console.error(error)
-  });
 
