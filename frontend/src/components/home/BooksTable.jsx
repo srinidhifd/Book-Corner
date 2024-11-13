@@ -2,6 +2,12 @@ import { Link } from 'react-router-dom';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { BsInfoCircle } from 'react-icons/bs';
 import { MdOutlineDelete } from 'react-icons/md';
+import { DateTime } from 'luxon'; // Import Luxon's DateTime
+
+// Helper function to format date using Luxon
+const formatDate = (dateString) => {
+  return DateTime.fromISO(dateString).toLocaleString(DateTime.DATETIME_MED); 
+};
 
 const BooksTable = ({ books }) => {
   return (
@@ -13,6 +19,7 @@ const BooksTable = ({ books }) => {
             <th className="p-4 font-semibold text-sm text-center">Title</th>
             <th className="p-4 font-semibold text-sm text-center max-md:hidden">Author</th>
             <th className="p-4 font-semibold text-sm text-center max-md:hidden">Published Year</th>
+            <th className="p-4 font-semibold text-sm text-center max-md:hidden">Created At</th>
             <th className="p-4 font-semibold text-sm text-center">Action</th>
           </tr>
         </thead>
@@ -26,6 +33,9 @@ const BooksTable = ({ books }) => {
               <td className="p-4 text-center text-gray-800 font-semibold">{book.title}</td>
               <td className="p-4 text-center text-gray-600 max-md:hidden">{book.author}</td>
               <td className="p-4 text-center text-gray-600 max-md:hidden">{book.publishYear}</td>
+              <td className="p-4 text-center text-gray-600 max-md:hidden">
+                {formatDate(book.createdAt)}
+              </td>
               <td className="p-4 text-center">
                 <div className="flex justify-center gap-x-4">
                   <Link to={`/books/details/${book._id}`} className="group relative">
